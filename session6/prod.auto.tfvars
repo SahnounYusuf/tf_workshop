@@ -1,4 +1,4 @@
-resourcename  = "AzureRMResource"
+resourcename  = "PiCloud"
 location      = "North Europe"
 storagename   = "azurermtfworkshopstorage"
 tags          = { environment = "demo", owner = "sahnoun", purpose = "TFdemo" }
