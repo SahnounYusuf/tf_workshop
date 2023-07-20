@@ -100,10 +100,10 @@ resource "azurerm_virtual_machine" "vm-slave" {
   # Uncomment this line to delete the data disks automatically when deleting the VM
   # delete_data_disks_on_termination = true
 
-  storage_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
+storage_image_reference {
+    publisher = "canonical"
+    offer     = "0001-com-ubuntu-server-focal"
+    sku       = "20_04-lts-gen2"
     version   = "latest"
   }
   storage_os_disk {
@@ -113,8 +113,8 @@ resource "azurerm_virtual_machine" "vm-slave" {
     managed_disk_type = "Standard_LRS"
   }
   os_profile {
-    computer_name  = "hostname"
-    admin_username = "testadmin"
+    computer_name  = "ubuntu"
+    admin_username = "ubuntu"
     admin_password = "user_123"
   }
 
@@ -123,7 +123,7 @@ resource "azurerm_virtual_machine" "vm-slave" {
 
     ssh_keys {
       key_data = file("id_rsa.pub")
-      path     = "/home/testadmin/.ssh/authorized_keys"
+      path     = "/home/ubuntu/.ssh/authorized_keys"
     }
   }
 
@@ -135,7 +135,7 @@ resource "azurerm_virtual_machine" "vm-master" {
   location              = azurerm_resource_group.resourcegroup.location
   resource_group_name   = azurerm_resource_group.resourcegroup.name
   network_interface_ids = [azurerm_network_interface.nic.2.id]
-  vm_size               = "Standard_B1s"
+  vm_size               = "Standard_B2s"
 
 
   # Uncomment this line to delete the OS disk automatically when deleting the VM
@@ -144,10 +144,10 @@ resource "azurerm_virtual_machine" "vm-master" {
   # Uncomment this line to delete the data disks automatically when deleting the VM
   # delete_data_disks_on_termination = true
 
-  storage_image_reference {
-    publisher = "Canonical"
-    offer     = "UbuntuServer"
-    sku       = "16.04-LTS"
+storage_image_reference {
+    publisher = "canonical"
+    offer     = "0001-com-ubuntu-server-focal"
+    sku       = "20_04-lts-gen2"
     version   = "latest"
   }
   storage_os_disk {
@@ -157,8 +157,8 @@ resource "azurerm_virtual_machine" "vm-master" {
     managed_disk_type = "Standard_LRS"
   }
   os_profile {
-    computer_name  = "hostname"
-    admin_username = "testadmin"
+    computer_name  = "ubuntu"
+    admin_username = "ubuntu"
     admin_password = "user_123"
   }
 
@@ -167,13 +167,13 @@ resource "azurerm_virtual_machine" "vm-master" {
 
     ssh_keys {
       key_data = file("id_rsa.pub")
-      path     = "/home/testadmin/.ssh/authorized_keys"
+      path     = "/home/ubuntu/.ssh/authorized_keys"
     }
   }
 
   connection {
     type        = "ssh"
-    user        = "testadmin"
+    user        = "ubuntu"
     password    = "user_123"
     private_key = file("id_rsa")
     host        = azurerm_public_ip.publicip.2.ip_address
@@ -181,9 +181,9 @@ resource "azurerm_virtual_machine" "vm-master" {
 
   provisioner "file" {
     source      = "ansible"
-    destination = "/home/testadmin/ansible"
+    destination = "/home/ubuntu/ansible"
   }
-
+ 
   provisioner "remote-exec" {
     inline = [
       "sudo apt update",
@@ -192,6 +192,7 @@ resource "azurerm_virtual_machine" "vm-master" {
       "sudo apt install -y ansible",
     ]
   }
+
 
   tags = merge(var.tags, var.tags-2)
 }
