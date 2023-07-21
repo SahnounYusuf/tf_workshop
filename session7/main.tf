@@ -113,8 +113,8 @@ storage_image_reference {
     managed_disk_type = "Standard_LRS"
   }
   os_profile {
-    computer_name  = "ubuntu"
-    admin_username = "ubuntu"
+    computer_name  = "ubuntu${count.index}"
+    admin_username = "ubuntu${count.index}"
     admin_password = "user_123"
   }
 
@@ -123,7 +123,7 @@ storage_image_reference {
 
     ssh_keys {
       key_data = file("id_rsa.pub")
-      path     = "/home/ubuntu/.ssh/authorized_keys"
+      path     = "/home/ubuntu${count.index}/.ssh/authorized_keys"
     }
   }
 
