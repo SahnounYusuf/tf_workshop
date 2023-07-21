@@ -1,0 +1,9 @@
+<VirtualHost *:80>
+    ServerName www.ansiblesite.tn
+    DocumentRoot /var/www/html/ansiblesite
+    <Directory /var/www/html/ansiblesite>
+        Options Indexes FollowSymLinks
+        AllowOverride All
+        Require all granted
+    </Directory>
+</VirtualHost>
