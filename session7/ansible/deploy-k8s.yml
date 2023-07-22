@@ -1,0 +1,39 @@
+- hosts: master
+  tasks:
+     - name: Install pip3
+       become: yes
+       apt:
+          name: python3-pip
+          state: present
+     - name: "Install kubernetes python package" #This will be installed on the remote host.
+       pip:
+          name: kubernetes
+          state: present
+# Create a test namespace on the cluster without any manifest fies. This is an added advantage on ansible.
+     - name: "Create a k8s namespace"
+       k8s:
+          name: kmayen
+          api_version: v1
+          kind: Namespace
+          state: present
+# Copying the Pod.yaml and deployment.yaml in the remote node.
+     - name: "copying file with playbook"
+       copy:
+           src: ./k8s_tests/pods.yaml
+           dest: /tmp/pods.yaml
+     - name: copying file with playbook
+       copy:
+           src: ./k8s_tests/services.yaml
+           dest: /tmp/services.yaml
+# Creating a Kubernetes pod in test using file stored on local.
+     - name: "Create a pod"
+       k8s:
+           state: present
+           namespace: test
+           src: /tmp/pods.yaml
+# Creating a Kubernetes deployment in test using file stored locally
+     - name: "Create a deployment"
+       k8s:
+           state: present
+           namespace: test
+           src: /tmp/services.yaml

@@ -100,7 +100,7 @@ resource "azurerm_virtual_machine" "vm-slave" {
   # Uncomment this line to delete the data disks automatically when deleting the VM
   # delete_data_disks_on_termination = true
 
-storage_image_reference {
+  storage_image_reference {
     publisher = "canonical"
     offer     = "0001-com-ubuntu-server-jammy"
     sku       = "22_04-lts-gen2"
@@ -144,7 +144,7 @@ resource "azurerm_virtual_machine" "vm-master" {
   # Uncomment this line to delete the data disks automatically when deleting the VM
   # delete_data_disks_on_termination = true
 
-storage_image_reference {
+  storage_image_reference {
     publisher = "canonical"
     offer     = "0001-com-ubuntu-server-jammy"
     sku       = "22_04-lts-gen2"
@@ -183,7 +183,7 @@ storage_image_reference {
     source      = "ansible"
     destination = "/home/ubuntu/ansible"
   }
- 
+
   provisioner "remote-exec" {
     inline = [
       "sudo apt update",

@@ -58,6 +58,28 @@
         chdir: $HOME
         creates: pod_network_setup.log
 
+    - name: create .kube directory for root
+      become: yes
+      become_user: root
+      file:
+        path: $HOME/.kube
+        state: directory
+        mode: 0755
+
+    - name: copy admin.conf to user's kube config for root
+      copy:
+        src: /etc/kubernetes/admin.conf
+        dest: /root/.kube/config
+        remote_src: yes
+        owner: root
+
+    - name: install Pod network for root
+      become: yes
+      shell: kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml >> pod_network_setup.log
+      args:
+        chdir: $HOME
+        creates: pod_network_setup.log
+
     - name: install Pod network for root
       become: yes
       shell: kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/master/Documentation/kube-flannel.yml >> pod_network_setup.log
